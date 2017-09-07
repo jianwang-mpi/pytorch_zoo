@@ -20,7 +20,9 @@ structure:
     (fc3): Linear (84 -> 10)
  
 loss function: cross entropy
+
 optimizer: SGD lr = 0.01, mometum = 0.9
 
 loss graph:
+
 ![loss graph](https://github.com/yt4766269/pytorch_zoo/blob/master/LeNet/out.png)
