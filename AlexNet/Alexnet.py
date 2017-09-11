@@ -4,6 +4,7 @@ import torch.optim.optimizer as optim
 import torch.nn as nn
 class AlexNet(nn.Module):
     def __init__(self, num_classes = 10):
+        super(AlexNet, self).__init__()
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size= 11, stride=4, padding = 2)
         self.pool1 = nn.MaxPool2d(kernel_size=3, stride=2)
         self.conv2 = nn.Conv2d(in_channels=64, out_channels=192, padding=2, kernel_size=5)
