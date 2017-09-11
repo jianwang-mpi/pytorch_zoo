@@ -6,4 +6,5 @@ due to the lack of high performance NVIDIA video card, the size of models could 
 
 ### The implemented models:
 - LeNet
-- AlexNet
+- AlexNet (did not implement the LRN layer)
+- ResNet
