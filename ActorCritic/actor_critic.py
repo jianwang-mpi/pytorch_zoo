@@ -8,8 +8,8 @@ from torch.autograd import Variable
 from torch.distributions import Categorical
 from itertools import count
 env = gym.make('CartPole-v0')
-
-
+from tensorboard_logger import log_value, configure
+configure(logdir='runs/run')
 class Net(nn.Module):
     def forward(self, x):
         x = self.affine1(x)
@@ -39,7 +39,7 @@ def select_action(state):
     model.saved_actions.append((m.log_prob(action), value_result))
     return action
 
-def finish_episode():
+def finish_episode(episode):
     R=0
     policy_losses = []
     value_losses = []
@@ -56,6 +56,9 @@ def finish_episode():
 
     optimizer.zero_grad()
     loss = torch.cat(policy_losses).sum() + torch.sum(torch.cat(value_losses))
+    log_value('policy loss', torch.cat(policy_losses).sum().data[0], episode)
+    log_value('value loss', torch.cat(value_losses).sum().data[0], episode)
+
     loss.backward()
     optimizer.step()
     model.rewards = []
@@ -73,14 +76,14 @@ def main():
             if done:
                 break
         running_reward = running_reward * 0.99 + t * 0.01
-        finish_episode()
+        finish_episode(ep)
         if ep % 10 == 0:
             print('Episode {}\tLast length: {:5d}\tAverage length: {:.2f}'.format(
                 ep, t, running_reward))
-        if running_reward > env.spec.reward_threshold:
-            print("Solved! Running reward is now {} and "
-                  "the last episode runs to {} time steps!".format(running_reward, t))
-            break
+        # if running_reward > env.spec.reward_threshold:
+        #     print("Solved! Running reward is now {} and "
+        #           "the last episode runs to {} time steps!".format(running_reward, t))
+        #     break
 
 
 if __name__ == '__main__':
